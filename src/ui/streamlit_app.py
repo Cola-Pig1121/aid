@@ -10,7 +10,8 @@ from typing import Any
 import streamlit as st
 from streamlit.elements.widgets.chat import ChatInputValue
 
-from src.main import check_api_keys, create_components, load_environment
+from src.main import check_api_keys, create_components
+from src.config import get_config
 
 DEMO_PRESETS = [
     {
@@ -42,11 +43,12 @@ def run_async(coro: Any) -> Any:
 @st.cache_resource
 def get_runtime(provider_override: str | None = None):
     """Initialize runtime dependencies once per session."""
-    load_environment()
-    provider = provider_override or check_api_keys()
+    # 初始化配置（会自动加载 config.toml）
+    config = get_config()
+    provider = provider_override or check_api_keys(config)
     if not provider:
         raise RuntimeError("未检测到可用的大模型 API 密钥。")
-    return create_components(provider)
+    return create_components(provider, config)
 
 
 def get_chat_history() -> list[dict[str, str]]:
