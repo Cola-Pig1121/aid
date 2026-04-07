@@ -2,6 +2,7 @@
 dist
 build
 .env
+secrets.toml
 .uv.lock
 .ruff_cache\*
 docs

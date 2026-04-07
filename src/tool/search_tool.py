@@ -1,6 +1,5 @@
 """搜索工具 - 使用Tavily进行网络搜索，支持位置感知"""
 
-import os
 import re
 from typing import Optional
 
@@ -93,7 +92,11 @@ class SearchTool(BaseTool):
 
     def __init__(self, api_key: Optional[str] = None, max_results: int = 5):
         super().__init__()
-        self._api_key = api_key or os.getenv("TAVILY_API_KEY")
+        if api_key is None:
+            from src.config import get_config
+
+            api_key = get_config().tavily_api_key
+        self._api_key = api_key
         self._max_results = max_results
 
     def _build_search_query(self, query: str, location: Optional[str] = None) -> str:

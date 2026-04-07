@@ -1,7 +1,6 @@
 """位置工具 - 获取用户地理位置"""
 
 import hashlib
-import os
 import urllib.parse
 from typing import Optional, Any
 
@@ -130,10 +129,14 @@ class LocationTool(BaseTool):
     _tencent_api: Any = None
     _cached_location: Optional[dict[str, Any]] = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, config=None, **kwargs):
         super().__init__(**kwargs)
-        tencent_key = os.getenv("TENCENT_MAP_KEY")
-        tencent_sk = os.getenv("TENCENT_MAP_SK")
+        if config is None:
+            from src.config import get_config
+
+            config = get_config()
+        tencent_key = config.tencent_map_key
+        tencent_sk = config.tencent_map_sk
         self._tencent_api = TencentMapAPI(tencent_key, tencent_sk)
 
     def _get_location_by_ip(self) -> dict[str, Any]:

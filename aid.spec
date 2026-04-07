@@ -22,6 +22,7 @@ datas += vega_datas
 datas += [
     (str(project_root / "configs"), "configs"),
     (str(project_root / "src"), "aid"),
+    (str(project_root / "config.toml.example"), "config.toml.example"),
 ]
 
 binaries = []
@@ -41,7 +42,9 @@ hiddenimports += collect_submodules("tornado")
 hiddenimports += collect_submodules("altair")
 hiddenimports += collect_submodules("vega_datasets")
 hiddenimports += [
+    "tomllib",
     "src",
+    "src.config",
     "src.main",
     "src.llm",
     "src.llm.client",
@@ -66,7 +69,6 @@ hiddenimports += [
     "pydantic",
     "yaml",
     "PIL",
-    "dotenv",
     "tavily",
     "pytesseract",
     "charset_normalizer",

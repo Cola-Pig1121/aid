@@ -1,4 +1,3 @@
-import os
 from typing import AsyncIterator, List, Optional, Any
 from openai import AsyncOpenAI
 from langchain_core.language_models import BaseChatModel
@@ -6,6 +5,8 @@ from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, System
 from langchain_core.outputs import ChatGeneration, ChatResult
 from langchain_core.callbacks import CallbackManagerForLLMRun
 from pydantic import Field
+
+from src.config import get_config
 
 
 class LLMClient:
@@ -19,30 +20,31 @@ class LLMClient:
         temperature: float = 0.7,
         max_tokens: int = 2048,
     ):
-        self.provider = provider or self._detect_provider()
-        
+        config = get_config()
+        self.provider = provider or self._detect_provider(config)
+
         if self.provider == "modelscope":
-            self.api_key = api_key or os.getenv("MODELSCOPE_API_KEY")
-            self.base_url = base_url or os.getenv("MODELSCOPE_BASE_URL", "https://api-inference.modelscope.cn/v1")
-            self.model = model or os.getenv("MODELSCOPE_MODEL", "Qwen/Qwen3.5-27B")
-        else:  
-            self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
-            self.base_url = base_url or os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-            self.model = model or os.getenv("OPENROUTER_MODEL", "qwen/qwen-2.5-72b-instruct")
-        
+            self.api_key = api_key or config.modelscope_api_key
+            self.base_url = base_url or config.modelscope_base_url
+            self.model = model or config.modelscope_model
+        else:
+            self.api_key = api_key or config.openrouter_api_key
+            self.base_url = base_url or config.openrouter_base_url
+            self.model = model or config.openrouter_model
+
         if not self.api_key:
             raise ValueError(f"API key is required for {self.provider}")
-        
+
         self.temperature = temperature
         self.max_tokens = max_tokens
-        
+
         self.client = AsyncOpenAI(
             base_url=self.base_url,
             api_key=self.api_key,
         )
-    
-    def _detect_provider(self) -> str:
-        if os.getenv("MODELSCOPE_API_KEY"):
+
+    def _detect_provider(self, config) -> str:
+        if config.modelscope_api_key:
             return "modelscope"
         return "openrouter"
     

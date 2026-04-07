@@ -1,0 +1,28 @@
+# AID 配置文件
+# 复制此文件为 config.toml 并填入您的配置
+
+[modelscope]
+# ModelScope API Key
+api_key = "ms-1bbfb452-6da3-4081-8e3f-23b5d61fc759"
+# Base URL (可选)
+# base_url = "https://api-inference.modelscope.cn/v1"
+# 模型选择 (可选)
+model = "Qwen/Qwen3.5-27B"
+
+[llm]
+# Temperature (可选，默认: 0.7)
+temperature = 0.7
+
+[server]
+# 端口 (可选，默认: 7860)
+port = 7860
+
+[search]
+# Tavily API Key (可选，用于搜索功能)
+api_key = "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"
+
+[location]
+# 腾讯地图 API Key
+tencent_key = "LSXBZ-J3ACL-VPYPE-MKPDL-NWZYO-XMFU7"
+# 腾讯地图 Secret Key
+tencent_sk = "xVd9GDQ94KrS9A9C4DZO5hxDrMc4MTwR"
