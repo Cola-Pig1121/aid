@@ -1,0 +1,7 @@
+.venv\*
+dist
+build
+.env
+.uv.lock
+.ruff_cache\*
+docs

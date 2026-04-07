@@ -1,0 +1,72 @@
+# AID 医疗报告智能分析系统 - 配置文件
+# 此文件用于配置系统的各项参数
+
+# LLM (大语言模型) 配置
+llm:
+  # ModelScope API 配置
+  api_key: ${MODELSCOPE_API_KEY}
+  base_url: "https://api-inference.modelscope.cn/v1"
+  model: "Qwen/Qwen3.5-27B"
+  temperature: 0.7
+  max_tokens: 2048
+  
+  # 可选模型列表
+  available_models:
+    - "Qwen/Qwen3.5-27B"
+    - "Qwen/Qwen2.5-72B-Instruct"
+
+# 工具配置
+tools:
+  # Tavily 搜索配置 (用于搜索医院信息)
+  tavily_search:
+    api_key: ${TAVILY_API_KEY}
+    max_results: 5
+    search_depth: "basic"
+  
+  # 报告解析配置 (OCR文字识别)
+  report_parser:
+    ocr_language: "chi_sim+eng"
+    supported_formats:
+      - ".jpg"
+      - ".jpeg"
+      - ".png"
+      - ".bmp"
+      - ".tiff"
+
+# Agent 配置
+agent:
+  type: "react"
+  max_iterations: 15
+  system_prompt: |
+    你是一位专业的医疗AI助手，可以帮助用户分析医疗报告、解答健康问题、推荐医院和科室。
+    
+    你的能力包括：
+    1. 分析体检报告中的异常指标
+    2. 解释医学术语和症状
+    3. 提供健康建议
+    4. 推荐合适的医院和科室
+    5. 回答一般健康咨询
+    
+    注意事项：
+    - 请用中文回复用户
+    - 提供准确、有用的医疗信息
+    - 对于严重症状，建议及时就医
+    - 不要替代专业医生的诊断
+
+# Gradio UI 配置
+ui:
+  title: "AID 医疗报告智能分析系统"
+  description: "上传医疗报告图片或输入症状描述，AI助手将为您提供专业的健康分析和建议。"
+  theme: "default"
+  
+  # 服务器配置
+  server:
+    host: "0.0.0.0"
+    port: 7860
+    share: true
+    debug: false
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
