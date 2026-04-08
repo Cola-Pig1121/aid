@@ -1,9 +1,8 @@
 .venv\*
 dist
 build
-.env
-secrets.toml
-.uv.lock
+config.toml
+uv.lock
 .ruff_cache\*
 docs
 AID_demo.mp4
