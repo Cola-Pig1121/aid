@@ -207,18 +207,33 @@ http://localhost:7860
 - 图片通过输入框左侧的 `+` 号上传，可与文字一起发送
 - 可通过 `--host` 与 `--port` 参数修改访问地址
 
-### 2. 环境变量配置
+### 2. 配置文件
 
-首次运行前需要配置 `.env` 文件。项目已提供模板 [`.env.example`](./.env.example)。
+首次运行前需要配置 `config.toml` 文件。项目已提供模板 [`config.toml.example`](./config.toml.example)。
+
+复制模板并编辑配置：
+
+```bash
+cp config.toml.example config.toml
+# 编辑 config.toml 填入您的 API 密钥
+```
 
 核心配置项如下：
 
-```env
-MODELSCOPE_API_KEY=your_key
-OPENROUTER_API_KEY=your_key
-TAVILY_API_KEY=your_key
-TENCENT_MAP_KEY=your_key
-TENCENT_MAP_SK=your_sk
+```toml
+[modelscope]
+api_key = "your_modelscope_api_key"
+
+[llm]
+temperature = 0.7
+max_tokens = 4096
+
+[search]
+api_key = "your_tavily_api_key"
+
+[location]
+tencent_key = "your_tencent_map_key"
+tencent_sk = "your_tencent_map_sk"
 ```
 
 ### 3. 可执行文件展示
@@ -241,10 +256,11 @@ aid/
 │   ├── llm/
 │   ├── tool/
 │   ├── ui/
+│   ├── config.py
 │   └── main.py
 ├── dist/
 ├── pyproject.toml
-├── .env.example
+├── config.toml.example
 └── README.md
 ```
 

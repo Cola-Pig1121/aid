@@ -56,6 +56,7 @@ def create_components(provider: str, config):
             model=config.modelscope_model,
             provider="modelscope",
             temperature=config.llm_temperature,
+            max_tokens=config.llm_max_tokens,
         )
     else:
         llm_client = LLMClient(
@@ -64,6 +65,7 @@ def create_components(provider: str, config):
             model=config.openrouter_model,
             provider="openrouter",
             temperature=config.llm_temperature,
+            max_tokens=config.llm_max_tokens,
         )
 
     print(f"[成功] LLM 客户端已创建 (提供商: {provider}, 模型: {llm_client.model})")

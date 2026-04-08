@@ -6,3 +6,5 @@ secrets.toml
 .uv.lock
 .ruff_cache\*
 docs
+AID_demo.mp4
+demo.jpg

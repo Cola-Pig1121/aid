@@ -121,6 +121,10 @@ class Config:
         return self.get_float("llm", "temperature", default=0.7)
 
     @property
+    def llm_max_tokens(self) -> int:
+        return self.get_int("llm", "max_tokens", default=4096)
+
+    @property
     def server_port(self) -> int:
         return self.get_int("server", "port", default=7860)
 

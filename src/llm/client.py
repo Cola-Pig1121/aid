@@ -74,10 +74,12 @@ class LLMClient:
         """从兼容 OpenAI 的响应中提取可展示文本。"""
         choices = getattr(response, "choices", None) or []
         if not choices:
+            print(f"[调试] LLM响应没有choices: {response}")
             return "模型未返回可用结果。"
 
         message = getattr(choices[0], "message", None)
         if message is None:
+            print(f"[调试] LLM响应没有message: {response}")
             return "模型返回了空消息。"
 
         content = getattr(message, "content", None)
@@ -87,11 +89,24 @@ class LLMClient:
         if isinstance(content, list):
             parts: list[str] = []
             for item in content:
+                # 处理 OpenAI 格式的内容块
                 if isinstance(item, dict):
-                    text = item.get("text")
-                    if isinstance(text, str):
-                        parts.append(text)
-                else:
+                    item_type = item.get("type", "")
+                    # text 类型
+                    if item_type == "text":
+                        text = item.get("text", "")
+                        if isinstance(text, str):
+                            parts.append(text)
+                    # reasoning 类型 (Qwen 思维链)
+                    elif item_type == "reasoning":
+                        # 可以选择是否包含思维链
+                        pass
+                    # image_url 类型
+                    elif item_type == "image_url":
+                        # 忽略图片URL
+                        pass
+                # 处理旧格式（只有 text 属性）
+                elif hasattr(item, "text"):
                     text = getattr(item, "text", None)
                     if isinstance(text, str):
                         parts.append(text)
@@ -106,6 +121,13 @@ class LLMClient:
         if isinstance(reasoning, str) and reasoning.strip():
             return reasoning
 
+        # 尝试从原始响应获取更多信息
+        finish_reason = getattr(choices[0], "finish_reason", None)
+        if finish_reason == "length":
+            return "模型响应被截断（达到最大token限制）。"
+
+        # 调试输出
+        print(f"[调试] 无法解析LLM响应: content_type={type(content)}, finish_reason={finish_reason}")
         return "模型返回成功，但没有可解析的文本内容。"
     
     async def _stream_chat(
